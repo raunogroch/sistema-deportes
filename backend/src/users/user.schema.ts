@@ -14,6 +14,10 @@ export enum UserRole {
 
 @Schema({ timestamps: true })
 export class User {
+  toObject() {
+    throw new Error("Method not implemented.");
+  }
+
   @Prop({ required: true })
   name: string;
 

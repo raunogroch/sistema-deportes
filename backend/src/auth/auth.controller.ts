@@ -1,8 +1,17 @@
-import { Controller, Post, Body, HttpCode, HttpStatus } from "@nestjs/common";
+import {
+  Controller,
+  Post,
+  Body,
+  HttpCode,
+  HttpStatus,
+  UseGuards,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { LoginDto } from "./dto/login.dto";
 import { RegisterDto } from "./dto/register.dto";
+import { AuthGuard } from "@nestjs/passport";
 
 @ApiTags("Authentication")
 @Controller("auth")
@@ -26,6 +35,7 @@ export class AuthController {
 
   @Post("login")
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard("local"))
   @ApiOperation({ summary: "Login user" })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -36,6 +46,13 @@ export class AuthController {
     description: "Invalid credentials",
   })
   async login(@Body() loginDto: LoginDto) {
-    return this.authService.login(loginDto);
+    const user = await this.authService.validateUser(
+      loginDto.email,
+      loginDto.password
+    );
+    if (!user) {
+      throw new UnauthorizedException("Invalid credentials");
+    }
+    return this.authService.login(user); // Aquí se pasa el usuario completo
   }
 }
