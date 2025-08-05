@@ -12,7 +12,7 @@ import {
   SponsorshipDocument,
   SponsorshipStatus,
 } from "./schemas/sponsorship.schema";
-import { UserRole } from "../users/user.schema";
+import { UserRole } from "../users/schemas/user.schema";
 import { UsersService } from "../users/users.service";
 import * as Joi from "joi";
 

@@ -6,6 +6,7 @@ import { UsersModule } from "./users/users.module";
 import { PerformanceModule } from "./performance/performance.module";
 import { MedicalModule } from "./medical/medical.module";
 import { AdminModule } from "./admin/admin.module";
+import { SportsModule } from "./sports/sports.module";
 import databaseConfig from "./config/database.config";
 import { JwtModule } from "@nestjs/jwt";
 import { DbTestService } from "./tools/db-test.service";
@@ -39,6 +40,7 @@ import { DbTestService } from "./tools/db-test.service";
     PerformanceModule,
     MedicalModule,
     AdminModule,
+    SportsModule,
   ],
   providers: [DbTestService],
 })

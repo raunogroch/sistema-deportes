@@ -12,7 +12,7 @@ import { PerformanceService } from "./performance.service";
 import { AuthGuard } from "@nestjs/passport";
 import { RolesGuard } from "../common/guards/roles.guard";
 import { Roles } from "../common/decorators/roles.decorator";
-import { UserRole } from "../users/user.schema";
+import { UserRole } from "../users/schemas/user.schema";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
 @ApiTags("Performance")

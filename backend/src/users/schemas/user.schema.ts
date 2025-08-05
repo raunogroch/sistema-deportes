@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
 import * as Joi from "joi";
 
 export type UserDocument = User & Document;
@@ -40,8 +40,8 @@ export class User {
   contact: string;
 
   // Datos deportivos
-  @Prop()
-  discipline: string;
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'Sport' }] })
+  discipline: Types.ObjectId[];
 
   @Prop()
   category: string;
@@ -69,11 +69,18 @@ export const userValidationSchema = Joi.object({
   name: Joi.string().required(),
   email: Joi.string().email().required(),
   password: Joi.string().min(8).required(),
-  roles: Joi.array().items(Joi.string().valid(...Object.values(UserRole))),
+  roles: Joi.array().items(Joi.string().valid(...Object.values(UserRole))).required(),
   age: Joi.number().min(0),
   gender: Joi.string().valid("male", "female", "other"),
   contact: Joi.string(),
-  discipline: Joi.string(),
+  discipline: Joi.alternatives()
+    .conditional('roles', {
+      is: Joi.array().items(Joi.string().valid('athlete')).has('athlete'),
+      then: Joi.array().items(
+        Joi.string().regex(/^[0-9a-fA-F]{24}$/)
+      ).min(1).required(),
+      otherwise: Joi.forbidden(),
+    }),
   category: Joi.string(),
   club: Joi.string(),
   sportsHistory: Joi.array().items(Joi.string()),
